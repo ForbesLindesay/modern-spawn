@@ -26,6 +26,8 @@ workflows:
           <<: *not_master
           name: node-14
           version: '14'
+      - lint:
+          <<: *not_master
 
   release:
     jobs:
@@ -73,12 +75,21 @@ jobs:
       - build
       - test
 
+  lint:
+    docker:
+      - image: circleci/node:12
+    steps:
+      - setup
+      - build
+      - lint
+
   publish-dry-run:
     docker:
       - image: circleci/node:12
     steps:
       - setup
       - build
+      - lint
       - publish-dry-run
 
   publish:
@@ -106,6 +117,15 @@ commands:
       - run:
           name: Build
           command: yarn build
+
+  lint:
+    steps:
+      - run:
+          name: Prettier
+          command: yarn prettier:check
+      - run:
+          name: Lint
+          command: yarn lint
 
   test:
     steps:
