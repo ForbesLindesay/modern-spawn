@@ -15,7 +15,7 @@
   "exports": {
     ".": [
       {
-        "import": "./es/index.js",
+        "import": "./es/index.mjs",
         "require": "./lib/index.js",
         "default": "./lib/index.js"
       },
@@ -27,7 +27,7 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc && tsc --build tsconfig.esm.json",
-    "postbuild": "rimraf lib/**/__tests__",
+    "postbuild": "rimraf {lib,es}/**/__tests__ && mv es/index.js es/index.mjs",
     "lint": "tslint './src/**/*.{ts,tsx}' -t verbose -p .",
     "prettier:write": "prettier --ignore-path .gitignore --write './**/*.{md,json,yaml,js,jsx,ts,tsx}'",
     "prettier:check": "prettier --ignore-path .gitignore --list-different './**/*.{md,json,yaml,js,jsx,ts,tsx}'",
