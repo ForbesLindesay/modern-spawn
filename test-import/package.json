@@ -1,0 +1,14 @@
+{
+  "name": "modern-spawn-test-import",
+  "private": true,
+  "@rollingversions/ignore": true,
+  "scripts": {
+    "test": "node test && tsc && node lib/test"
+  },
+  "dependencies": {
+    "@forbeslindesay/tsconfig": "^2.0.0",
+    "@types/node": "^13.13.4",
+    "modern-spawn": "file:../project/modern-spawn-0.0.0-rollingversions.tgz",
+    "typescript": "^3.8.3"
+  }
+}

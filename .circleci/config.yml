@@ -22,6 +22,12 @@ workflows:
           <<: *not_master
           name: node-12
           version: '12'
+      - unit-tests:
+          <<: *not_master
+          name: node-14
+          version: '14'
+      - lint:
+          <<: *not_master
 
   release:
     jobs:
@@ -33,6 +39,10 @@ workflows:
           <<: *only_master
           name: node-12
           version: '12'
+      - unit-tests:
+          <<: *only_master
+          name: node-14
+          version: '14'
 
       - publish-dry-run:
           <<: *only_master
@@ -50,6 +60,7 @@ workflows:
           requires:
             - node-10
             - node-12
+            - node-14
             - publish-approval
 
 jobs:
@@ -64,12 +75,21 @@ jobs:
       - build
       - test
 
+  lint:
+    docker:
+      - image: circleci/node:12
+    steps:
+      - setup
+      - build
+      - lint
+
   publish-dry-run:
     docker:
       - image: circleci/node:12
     steps:
       - setup
       - build
+      - lint
       - publish-dry-run
 
   publish:
@@ -98,11 +118,29 @@ commands:
           name: Build
           command: yarn build
 
+  lint:
+    steps:
+      - run:
+          name: Prettier
+          command: yarn prettier:check
+      - run:
+          name: Lint
+          command: yarn lint
+
   test:
     steps:
       - run:
           name: Test
           command: yarn test
+      - run:
+          name: Pack
+          command: npm pack
+      - run:
+          name: Setup Import Test
+          command: echo $PWD && cd .. && cp -a project/test-import/ test-import/ && cd test-import && npm i
+      - run:
+          name: Test Import
+          command: cd ../test-import && npm test
 
   publish-dry-run:
     steps:

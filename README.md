@@ -1,40 +1,84 @@
-# npm-package-template
+# modern-spawn
 
-A template for npm packages built in TypeScript
-
-## Setting Up the New Repo
-
-1. Hit "Use This Template" to create the repository
-1. Enable [CircleCI](https://circleci.com/add-projects/gh/ForbesLindesay)
-1. Enable [Change Log Version](https://changelogversion.com) using [My Change Log Version Installation](https://github.com/settings/installations/7328191)
-1. In Settings
-   1. Disable "Wikis"
-   1. Disable "Projects"
-   1. Disable "Allow merge commits"
-   1. Disable "Allow rebase merging"
-   1. Enable "Automatically delete head branches"
-1. Create a new branch
-1. Commit initial code to the branch (be sure to replace all refernces to npm-package-template, and remove these instructions from the README)
-1. Push the new branch and create a PR
-1. In Settings -> Branch Protection, create a new rule
-   1. Use "master" as the branch name pattern
-   1. Enable "Require status checks to pass before merging"
-   1. Select the unit tests and changelog as required
-   1. Enable "Include administrators"
-   1. Enable "Restrict who can push to matching branches"
-1. Merge the PR
+A set of spawn and exec functions that match the API you need 90% of the time in modern applications.
 
 ## Installation
 
 ```
-yarn add @forbeslindesay/npm-package-template
+yarn add modern-spawn
 ```
 
 ## Usage
 
 ```ts
-import add from '@forbeslindesay/npm-package-template';
+import {spawnBuffered} from 'modern-spawn';
 
-const result = add(2, 3);
-// => 5
+const hello = await spawnBuffered('echo', ['hello world']).getResult('utf8');
+
+console.log(hello);
 ```
+
+## API
+
+```ts
+export interface Result {
+  readonly command: string;
+  readonly args: readonly string[] | undefined;
+
+  readonly stdout: Buffer;
+  readonly stderr: Buffer;
+  readonly status: number | null;
+
+  getResult(): Buffer;
+  getResult(encoding: string): string;
+}
+
+export interface ResultPromise extends Promise<Result> {
+  getResult(): Promise<Buffer>;
+  getResult(encoding: string): Promise<string>;
+}
+
+export interface SpawnBufferedOptions extends SpawnOptions {
+  debug?:
+    | boolean
+    | {
+        stdout?: boolean;
+        stderr?: boolean;
+      };
+}
+
+export function spawnBuffered(
+  command: string,
+  args: string[],
+  opts?: SpawnBufferedOptions,
+): ResultPromise;
+
+export function spawnBufferedSync(
+  command: string,
+  args: string[],
+  opts: SpawnBufferedOptions,
+): Result;
+
+export interface ExecBufferedOptions extends ExecOptions {
+  debug?:
+    | boolean
+    | {
+        stdout?: boolean;
+        stderr?: boolean;
+      };
+}
+
+export function execBuffered(
+  command: string,
+  options?: ExecBufferedOptions,
+): ResultPromise;
+
+export function execBufferedSync(
+  command: string,
+  options?: ExecBufferedOptions,
+): Result;
+```
+
+- `getResult` can be used to request `stdout` as either a Buffer or string and automatically throw an error with plenty of context if the process exited with a non-zero status code.
+- set `debug` to `true` if you want to pipe log stdout & stderr to the parent process for debugging, in addition to buffering it.
+- `execBufferedSync` does returns an empty Buffer for `stderr` unless the process exits with a non-zero exit code. This is due to a limitation of the node.js API.

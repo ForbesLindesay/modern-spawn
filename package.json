@@ -1,24 +1,45 @@
 {
-  "name": "@forbeslindesay/npm-package-template",
-  "description": "npm-package-template",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
-  "repository": "git@github.com:ForbesLindesay/npm-package-template.git",
+  "name": "modern-spawn",
+  "version": "0.0.0-rollingversions",
+  "description": "modern-spawn",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "files": [
+    "es/index.mjs",
+    "lib/index.d.ts",
+    "lib/index.js",
+    "lib/index.js.map"
+  ],
+  "exports": {
+    ".": [
+      {
+        "import": "./es/index.mjs",
+        "require": "./lib/index.js",
+        "default": "./lib/index.js"
+      },
+      "./lib/index.js"
+    ]
+  },
+  "repository": "git@github.com:ForbesLindesay/modern-spawn.git",
   "author": "Forbes Lindesay <forbes@lindesay.co.uk>",
   "license": "MIT",
   "scripts": {
-    "build": "tsc",
-    "postbuild": "rimraf lib/**/__tests__",
+    "build": "tsc && tsc --build tsconfig.esm.json",
+    "postbuild": "rimraf {lib,es}/**/__tests__ && mv es/index.js es/index.mjs",
     "lint": "tslint './src/**/*.{ts,tsx}' -t verbose -p .",
     "prettier:write": "prettier --ignore-path .gitignore --write './**/*.{md,json,yaml,js,jsx,ts,tsx}'",
     "prettier:check": "prettier --ignore-path .gitignore --list-different './**/*.{md,json,yaml,js,jsx,ts,tsx}'",
     "test": "jest",
     "ci:test": "jest --silent --maxWorkers=2"
   },
-  "dependencies": {},
+  "dependencies": {
+    "cross-spawn": "^7.0.2"
+  },
   "devDependencies": {
     "@forbeslindesay/tsconfig": "^2.0.0",
+    "@types/cross-spawn": "^6.0.1",
     "@types/jest": "^25.2.1",
+    "@types/node": "^13.13.4",
     "husky": "^4.2.5",
     "jest": "^25.3.0",
     "lint-staged": "^10.1.3",
