@@ -1,9 +1,10 @@
 {
-  "name": "@forbeslindesay/npm-package-template",
-  "description": "npm-package-template",
+  "name": "modern-spawn",
+  "version": "0.0.0-rollingversions",
+  "description": "modern-spawn",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
-  "repository": "git@github.com:ForbesLindesay/npm-package-template.git",
+  "repository": "git@github.com:ForbesLindesay/modern-spawn.git",
   "author": "Forbes Lindesay <forbes@lindesay.co.uk>",
   "license": "MIT",
   "scripts": {
@@ -15,10 +16,14 @@
     "test": "jest",
     "ci:test": "jest --silent --maxWorkers=2"
   },
-  "dependencies": {},
+  "dependencies": {
+    "cross-spawn": "^7.0.2"
+  },
   "devDependencies": {
     "@forbeslindesay/tsconfig": "^2.0.0",
+    "@types/cross-spawn": "^6.0.1",
     "@types/jest": "^25.2.1",
+    "@types/node": "^13.13.4",
     "husky": "^4.2.5",
     "jest": "^25.3.0",
     "lint-staged": "^10.1.3",
