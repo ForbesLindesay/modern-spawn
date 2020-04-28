@@ -1,4 +1,4 @@
-import {spawn, sync as spawnSync} from 'cross-spawn';
+import CrossSpawn from 'cross-spawn';
 import {
   exec,
   ExecException,
@@ -113,7 +113,7 @@ export function spawnBuffered(
   args: string[],
   {debug, ...options}: SpawnBufferedOptions = {},
 ): ResultPromise {
-  const childProcess = spawn(command, args, options);
+  const childProcess = CrossSpawn.spawn(command, args, options);
   return toResultPromise(
     Promise.all([
       getBuffer(
@@ -135,7 +135,7 @@ export function spawnBufferedSync(
   args: string[],
   {debug, ...options}: SpawnBufferedOptions = {},
 ): Result {
-  const result = spawnSync(command, args, options);
+  const result = CrossSpawn.sync(command, args, options);
   if (debug) {
     if (debug === true || debug.stdout) {
       process.stdout.write(result.stdout);
