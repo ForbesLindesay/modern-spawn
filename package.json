@@ -5,9 +5,7 @@
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "files": [
-    "es/index.d.ts",
     "es/index.mjs",
-    "es/index.js.map",
     "lib/index.d.ts",
     "lib/index.js",
     "lib/index.js.map"
