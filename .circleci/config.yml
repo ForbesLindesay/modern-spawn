@@ -38,7 +38,7 @@ workflows:
           name: node-12
           version: '12'
       - unit-tests:
-          <<: *not_master
+          <<: *only_master
           name: node-14
           version: '14'
 
