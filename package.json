@@ -2,13 +2,31 @@
   "name": "modern-spawn",
   "version": "0.0.0-rollingversions",
   "description": "modern-spawn",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "files": [
+    "./es/index.d.ts",
+    "./es/index.js",
+    "./es/index.js.map",
+    "./lib/index.d.ts",
+    "./lib/index.js",
+    "./lib/index.js.map"
+  ],
+  "exports": {
+    ".": [
+      {
+        "import": "./es/index.js",
+        "require": "./lib/index.js",
+        "default": "./lib/index.js"
+      },
+      "./lib/index.js"
+    ]
+  },
   "repository": "git@github.com:ForbesLindesay/modern-spawn.git",
   "author": "Forbes Lindesay <forbes@lindesay.co.uk>",
   "license": "MIT",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && tsc --build tsconfig.esm.json",
     "postbuild": "rimraf lib/**/__tests__",
     "lint": "tslint './src/**/*.{ts,tsx}' -t verbose -p .",
     "prettier:write": "prettier --ignore-path .gitignore --write './**/*.{md,json,yaml,js,jsx,ts,tsx}'",

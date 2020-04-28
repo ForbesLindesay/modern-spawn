@@ -44,7 +44,7 @@ export function formatCommand(command: string, args?: readonly string[]) {
     .join(' ');
 }
 
-export class Result {
+class ResultClass {
   public readonly command: string;
   public readonly args: readonly string[] | undefined;
   public readonly stdout: Buffer;
@@ -87,6 +87,7 @@ export class Result {
     return this.stdout;
   }
 }
+export interface Result extends ResultClass {}
 
 export interface ResultPromise extends Promise<Result> {
   getResult(): Promise<Buffer>;
@@ -125,7 +126,7 @@ export function spawnBuffered(
       ),
       getStatusCode(childProcess),
     ] as const).then(([stdout, stderr, status]) => {
-      return new Result(command, args, stdout, stderr, status);
+      return new ResultClass(command, args, stdout, stderr, status);
     }),
   );
 }
@@ -144,7 +145,13 @@ export function spawnBufferedSync(
     }
   }
   if (result.error) throw result.error;
-  return new Result(command, args, result.stdout, result.stderr, result.status);
+  return new ResultClass(
+    command,
+    args,
+    result.stdout,
+    result.stderr,
+    result.status,
+  );
 }
 
 export interface ExecBufferedOptions extends ExecOptions {
@@ -175,7 +182,7 @@ export function execBuffered(
           process.stderr.write(stderr);
         }
       }
-      return new Result(
+      return new ResultClass(
         command,
         undefined,
         stdout,
@@ -205,7 +212,7 @@ export function execBufferedSync(
       }
     }
     // TODO: get actual stderr rather than allocating an empty array
-    return new Result(command, undefined, stdout, Buffer.alloc(0), 0);
+    return new ResultClass(command, undefined, stdout, Buffer.alloc(0), 0);
   } catch (ex) {
     if (ex.status && ex.stdout && ex.stderr) {
       if (debug) {
@@ -216,7 +223,13 @@ export function execBufferedSync(
           process.stderr.write(ex.stderr);
         }
       }
-      return new Result(command, undefined, ex.stdout, ex.stderr, ex.status);
+      return new ResultClass(
+        command,
+        undefined,
+        ex.stdout,
+        ex.stderr,
+        ex.status,
+      );
     }
     throw ex;
   }
