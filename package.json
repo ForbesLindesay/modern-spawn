@@ -5,12 +5,12 @@
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "files": [
-    "./es/index.d.ts",
-    "./es/index.js",
-    "./es/index.js.map",
-    "./lib/index.d.ts",
-    "./lib/index.js",
-    "./lib/index.js.map"
+    "es/index.d.ts",
+    "es/index.js",
+    "es/index.js.map",
+    "lib/index.d.ts",
+    "lib/index.js",
+    "lib/index.js.map"
   ],
   "exports": {
     ".": [
