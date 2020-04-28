@@ -2,7 +2,7 @@ var assert = require('assert');
 var spawn = require('modern-spawn');
 
 assert(
-  spawn.spawnBufferedSync('echo', ['Hello World']).getResult('utf8') ===
+  spawn.spawnBufferedSync('echo', ['Hello World']).getResult('utf8').trim() ===
     'Hello World',
 );
 
